@@ -1,7 +1,16 @@
-import { createSlice } from 'redux-toolkit';
+import { createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
-    items: [],
+    posts: [
+        {
+            "_id": "63c11f75d13602547dc332ea",
+            "title": "Niche Perfume",
+            "content": "test test",
+            "comments": [],
+            "likes": [],
+
+        }
+    ],
     loading: false,
     error: null
 };
@@ -13,12 +22,12 @@ const postSlice = createSlice({
         fetchPostsStart: state => {
             state.loading = true;
         },
-        fetchPost : (state, action) => {
-            state.items = action.payload;
+        fetchPost: (state, action) => {
+            state.items = {...state.items, ...action.payload};
             state.loading = false;
         },
         fetchPostsSuccess: (state, action) => {
-            state.items = action.payload;
+            state.items = {...state.items, ...action.payload};
             state.loading = false;
         },
         fetchPostsFailed: (state, action) => {
@@ -26,14 +35,15 @@ const postSlice = createSlice({
             state.error = action.payload;
         },
         addPost: (state, action) => {
+            
             // Check if action.payload is a valid post
-            if (!action.payload || !action.payload.id || !action.payload.title || !action.payload.content) {
+            if (!action.payload || !action.payload._id || !action.payload.title || !action.payload.content) {
                 state.error = "Invalid post data";
                 return;
             }
         
             // Check if the post id is unique
-            if (state.items.find(post => post.id === action.payload.id)) {
+            if (state.items.find(post => post._id === action.payload._id)) {
                 state.error = "Post id must be unique";
                 return;
             }
@@ -58,6 +68,7 @@ const postSlice = createSlice({
 
     }
 });
+
 
 export const { fetchPostsStart, fetchPostsSuccess, fetchPostsFailed , addPost,deletePost,updatePost,fetchPost } = postSlice.actions;
 

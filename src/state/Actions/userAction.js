@@ -14,27 +14,28 @@ import {FETCH_USERS,
       FETCH_USER_BY_ID,
       FETCH_USERS_FAILED
     } from './constants';
+    import { fetchUsersStart, fetchUsersSuccess, fetchUsersFailed, fetchUserById } from './userSlice';
+import axios from 'axios';
 
-      export const fetchUsers = () => async (dispatch) => {
-        try {
-            const res = await fetch('/api/users');
-            const users = await res.json();
-            dispatch({
-                type: FETCH_USERS,
-                payload: users
-            });
-        } catch (err) {
-            console.log(err)
-            dispatch({
-                type: FETCH_USERS_FAILED,
-                payload: err
-            });
-        }
+
+
+
+
+export const fetchUsers = () => async (dispatch) => {
+    try {
+        dispatch(fetchUsersStart());
+        const res = await axios.get('https://localhost5000/users/api/users');
+        const users = res.data;
+        dispatch(fetchUsersSuccess(users));
+    } catch (err) {
+        console.log(err);
+        dispatch(fetchUsersFailed(err));
     }
+};
 
     export const fetchUser = (id) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/${id}`);
+            const res = await axios.get(`users/api/users/${id}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER,
@@ -49,9 +50,12 @@ import {FETCH_USERS,
         }
     }
 
+
+
+
     export const fetchUserByEmail = (email) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/email/${email}`);
+            const res = await axios.get(`users/api/users/email/${email}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_EMAIL,
@@ -68,7 +72,7 @@ import {FETCH_USERS,
     
     export const fetchUserByUsername = (username) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/username/${username}`);
+            const res = await axios.get(`users/api/users/username/${username}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_USERNAME,
@@ -85,7 +89,7 @@ import {FETCH_USERS,
 
     export const fetchUserByPost = (id) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/post/${id}`);
+            const res = await axios.get(`users/api/users/post/${id}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_POST,
@@ -102,7 +106,7 @@ import {FETCH_USERS,
 
     export const fetchUserByLike = (id) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/like/${id}`);
+            const res = await axios.get(`users/api/users/like/${id}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_LIKE,
@@ -119,7 +123,7 @@ import {FETCH_USERS,
 
     export const fetchUserByComment = (id) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/comment/${id}`);
+            const res = await axios.get(`users/api/users/comment/${id}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_COMMENT,
@@ -136,7 +140,7 @@ import {FETCH_USERS,
 
     export const fetchUserByDate = (date) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/date/${date}`);
+            const res = await axios.get(`users/api/users/date/${date}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_DATE,
@@ -153,7 +157,7 @@ import {FETCH_USERS,
 
     export const fetchUserBySearch = (search) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/search/${search}`);
+            const res = await axios.get(`users/api/users/search/${search}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_SEARCH,
@@ -168,9 +172,9 @@ import {FETCH_USERS,
         }
     }
 
-    export const fetchUserById = (id) => async (dispatch) => {
+    export const fetchUserByIdAction = (id) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/${id}`);
+            const res = await axios.get(`users/api/users/${id}`);
             const user = await res.json();
             dispatch({
                 type: FETCH_USER_BY_ID,
@@ -185,9 +189,13 @@ import {FETCH_USERS,
         }
     }
 
+
+
+
+
     export const addUser = (user) => async (dispatch) => {
         try {
-            const res = await fetch('/api/users', {
+            const res = await axios.get('users/api/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -210,7 +218,7 @@ import {FETCH_USERS,
 
     export const updateUser = (user) => async (dispatch) => {
         try {
-            const res = await fetch(`/api/users/${user.id}`, {
+            const res = await axios.get(`users/api/users/${user.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -231,9 +239,15 @@ import {FETCH_USERS,
         }
     }
 
+    // router.post('/api/user', createUser);
+    // router.get('/api/users', getUsers);
+    // router.get('/api/users/:user_id', getUser);
+    // router.patch('/api/users/:user_id', updateUser);
+    // router.delete('/api/delete/:user_id',checkAuth, deleteUser);
+
     export const deleteUser = (id) => async (dispatch) => {
         try {
-            await fetch(`/api/users/${id}`, {
+            await axios.get(`users/api/delete/:${id}`, {
                 method: 'DELETE'
             });
             dispatch({
@@ -252,6 +266,6 @@ import {FETCH_USERS,
     export const fetchUserFailed = (err) => {
         return {
             type: FETCH_USER_FAILED,
-            payload: err
+            payload: err,
         }
     };
