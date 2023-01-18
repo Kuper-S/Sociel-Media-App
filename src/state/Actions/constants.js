@@ -67,6 +67,12 @@ export const DELETE_IMAGE = 'DELETE_IMAGE';
 export const UPDATE_IMAGE = 'UPDATE_IMAGE';
 export const FETCH_IMAGE = 'FETCH_IMAGE';
 export const FETCH_IMAGES_BY_POST = 'FETCH_IMAGES_BY_POST';
-
+// AUTH constants
+export const AUTH_USER = 'USER';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const UNAUTH_USER = 'UNAUTH_USER';
+export const FETCH_MESSAGE = 'FETCH_MESSAGE';
+export const FETCH_MESSAGE_FAILED = 'FETCH_MESSAGE_FAILED';
+export const AUTH_SUECCESS = 'AUTH_SUECCESS';
 
 
