@@ -5,9 +5,7 @@ import thunk from 'redux-thunk'
 // define your initial state object. This will contain the initial values for the different properties in your store.
 const initialState = {
     posts: {
-      items: [
-        {},
-      ],
+      items: [],
       loading: false,
       error: null
     },
@@ -40,6 +38,7 @@ const initialState = {
     // },
     auth: {
       isAuthenticated: false,
+      token: null,
       user: null,
       loading: false,
       error: null

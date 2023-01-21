@@ -1,17 +1,44 @@
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPostsAction } from '../../state/Actions/postActions';
+import { fetchPostsFailed } from '../../state/Actions/postActions';
+import axios from 'axios';
+import Post from '../Post/Post';
 
-
-const PostList = (props) => {
-    const { posts } = props;
+const PostsList = () => {
+    const dispatch = useDispatch();
+    // const posts = useSelector((state) => state.posts.posts);
+    const posts = useSelector((state) => state.posts.items);
+    const loading = useSelector((state) => state.posts.loading);
+    const error = useSelector((state) => state.posts.error);
+  
+    useEffect(() => {
+      if (!posts && !loading && !error) {
+        dispatch(fetchPostsAction());
+        
+      }
+    }, [dispatch, posts, loading, error]);
+  
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (error) {
+      return <div>{error}</div>;
+    }
+  
     return (
-        <div>
-            {posts.map(post => (
-                <div key={post.id}>
-                    <h2>{post.title}</h2>
-                    <p>{post.content}</p>
-                </div>
-            ))}
-        </div>
-    )
-}
+      <div>
+        {posts.map((post) => (
+          <Post key={post._id} post={post} />
+        ))}
+      </div>
+    );
+  };
 
-export default PostList;
+
+
+
+export default PostsList;
+
+

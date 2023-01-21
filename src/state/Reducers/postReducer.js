@@ -2,14 +2,7 @@ import { createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     posts: [
-        {
-            "_id": "63c11f75d13602547dc332ea",
-            "title": "Niche Perfume",
-            "content": "test test",
-            "comments": [],
-            "likes": [],
-
-        }
+        {}
     ],
     loading: false,
     error: null
@@ -26,8 +19,12 @@ const postSlice = createSlice({
             state.items = {...state.items, ...action.payload};
             state.loading = false;
         },
+        // fetchPostsSuccess: (state, action) => {
+        //     state.items = {...action.payload};
+        //     state.loading = false;
+        // },
         fetchPostsSuccess: (state, action) => {
-            state.items = {...state.items, ...action.payload};
+            state.items = action.payload;
             state.loading = false;
         },
         fetchPostsFailed: (state, action) => {

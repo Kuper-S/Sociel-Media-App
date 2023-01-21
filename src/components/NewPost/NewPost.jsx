@@ -12,36 +12,73 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
     const [content, setContent] = useState('');
     const [perfume, setPerfume] = useState('');
     const dispatch = useDispatch();
+    // const title = useSelector((state) => state.posts.title);
+    // const content = useSelector((state) => state.posts.content);
     const postId = useSelector((state) => state.posts.postId);
-    const _id = useSelector((state) => state.posts._id);
+    const image = useSelector((state) => state.posts.image);
+    const author = useSelector((state) => state.posts.author);
+    const comments = useSelector((state) => state.posts.comments);
+    const likes = useSelector((state) => state.posts.likes);
 
-    const getPostId = (_id) => {
-        dispatch(fetchPostsAction(_id));
-        console.log(_id);
-    }
-    
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const newPost = {
-        id: post,
-        title,
-        content,
-        perfume,
-        user : _id
+        const post = {
+            title: title,
+            content,
+            perfume,
+            image,
+            author,
+            comments,
+            likes,
+            user,
+            createdAt: new Date().toISOString()
+
+    
         };
-        if (postId) {
-            handleUpdatePost(newPost, postId);
-        } else {
-            handleNewPost(newPost);
-            getPostId();
-        }
+            
+    
+        console.log(post);
+        const newPost = await handleNewPost(post);
         
+        
+        // call fetchPostsAction to update the list of posts in the state
+        dispatch(fetchPostsAction());
     };
     
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const newPost = {
+    //         title,
+    //         content,
+    //         perfume,
+    //         image,
+    //         author,
+    //         comments,
+    //         likes
+
+    //     };
+    
+    //             console.log(newPost);
+            
+    //             const {data} = await handleNewPost(newPost);
+    //             newPost._id = data.post._id;
+    //             newPost.user = data.post.user;
+    //             newPost.image = data.post.image;
+    //             newPost.author = data.post.author;
+    //             newPost.comments = data.post.comments;
+    //             newPost.likes = data.post.likes;
+    //             // call fetchPostsAction to update the list of posts in the state
+            
+    // };
+
+
     return (
         <div className='new-post'>
         <h1>Add Post</h1>
         <form onSubmit={handleSubmit}>
+        <div>
+            <title>{user} </title>
+        </div>
             <div>
             <label>Title: </label>
             <br />
@@ -68,6 +105,7 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
             />
+            
             </div>
             <br />
             <Button type="submit">Submit</Button>
