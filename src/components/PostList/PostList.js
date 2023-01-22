@@ -29,8 +29,10 @@ const PostsList = () => {
   
     return (
       <div>
+        <h3>BLA</h3>
         {posts.map((post) => (
           <Post key={post._id} post={post} />
+          
         ))}
       </div>
     );

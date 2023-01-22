@@ -9,12 +9,12 @@ import { Button, Form } from 'react-bootstrap';
 
 const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handleDeletePost }) => {
     const [title, setTitle] = useState('');
+    const [name , setName] = useState('');
     const [content, setContent] = useState('');
     const [perfume, setPerfume] = useState('');
     const dispatch = useDispatch();
     // const title = useSelector((state) => state.posts.title);
     // const content = useSelector((state) => state.posts.content);
-    const postId = useSelector((state) => state.posts.postId);
     const image = useSelector((state) => state.posts.image);
     const author = useSelector((state) => state.posts.author);
     const comments = useSelector((state) => state.posts.comments);
@@ -24,9 +24,9 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
         e.preventDefault();
         const post = {
             title: title,
-            content,
-            perfume,
-            image,
+            content: content,
+            perfume : perfume,
+            image : image,
             author,
             comments,
             likes,
@@ -42,34 +42,10 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
         
         
         // call fetchPostsAction to update the list of posts in the state
-        dispatch(fetchPostsAction());
+        dispatch(fetchPostsAction(newPost));
     };
     
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     const newPost = {
-    //         title,
-    //         content,
-    //         perfume,
-    //         image,
-    //         author,
-    //         comments,
-    //         likes
 
-    //     };
-    
-    //             console.log(newPost);
-            
-    //             const {data} = await handleNewPost(newPost);
-    //             newPost._id = data.post._id;
-    //             newPost.user = data.post.user;
-    //             newPost.image = data.post.image;
-    //             newPost.author = data.post.author;
-    //             newPost.comments = data.post.comments;
-    //             newPost.likes = data.post.likes;
-    //             // call fetchPostsAction to update the list of posts in the state
-            
-    // };
 
 
     return (
@@ -79,6 +55,15 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
         <div>
             <title>{user} </title>
         </div>
+            <div>
+            <label>Name </label>
+            <br />
+            <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+            </div>
             <div>
             <label>Title: </label>
             <br />

@@ -76,20 +76,53 @@ export const deletePostAction = (id) => async (dispatch) => {
     }
 }
 
+export const handleDeleteAllPostsAction = () => async (dispatch) => {
+    try {
+        dispatch(fetchPostsStart());
+        const res = await axios.get('/posts/api/posts');
+        const data = res.data;
+        const newPost = data;
+        if (!newPost) {
+            return dispatch({ type: 'ERROR', error: 'Post not found' });
+        }
+        newPost.id = newPost._id;
+        const posts = newPost.map((post) => post._id);
+        console.log(posts);
+        await axios.delete(`/posts/api/deleteall`);
+        dispatch(deletePost(posts));
+    } catch (err) {
+        console.log(err);
+        dispatch({ type: 'ERROR', error: err });
+    }
+};
 
 
 export const updatePostAction = (id) => async (dispatch) => {
     try {
-        
-        const post = await axios.get(`/posts/api/${post._id}`);
-        if (!post) {
+        dispatch(fetchPostsStart());
+        const res = await axios.get('/posts/api/posts');
+        const data = res.data.posts;
+       
+        const newPost = data;
+        console.log(newPost[0]._id);
+        if (!newPost) {
             return dispatch({ type: 'ERROR', error: 'Post not found' });
         }
+        const updatedPost = newPost.find((post) => post._id === id);
+        // console.log(updatedPost.id, updatedPost._id, updatedPost.title, updatedPost.content);
+        if (!updatedPost) {
+            return dispatch({ type: 'ERROR', error: 'Post not found' });
+          }
+        await axios.put(`/posts/api/update/${updatedPost._id}`, updatedPost);
+        if (!res.data.posts) {
+            console.log(res.data);
+            throw new Error(res.data.message);
+        }
         
-
-        const res = await axios.put(`/posts/api/update/${post._id}`, post);
-        const updatedPost = res.data;
+       
+        // updatedPost.id = updatedPost._id;
         dispatch(updatePost(updatedPost));
+        console.log(updatedPost._id);
     } catch (err) {
         console.log(err);
         dispatch({ type: 'ERROR', error: err });
