@@ -1,5 +1,6 @@
 import React, { useState, useEffect , memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, ListGroup, Spinner ,Button} from 'react-bootstrap';
 import { addPostAction,deletePostAction,updatePostAction ,fetchPostsAction,fetchPostAction,handleDeleteAllPostsAction} from '../../state/Actions/postActions';
 import moment from 'moment';
@@ -9,15 +10,15 @@ import Post from '../Post/Post';
 
 const Feed = React.memo(() => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const posts = useSelector((state) => state.posts.items);
   const loading = useSelector((state) => state.posts.loading);
   const [newPost, setNewPost] = useState({});
   
-  // console.log(posts);
-  // console.log(typeof posts);
-  useEffect(() => {
-    dispatch(fetchPostsAction());
-  }, [dispatch]);
+ 
+  // useEffect(() => {
+  //   dispatch(fetchPostsAction());
+  // }, [dispatch]);
 
   const handleNewPost = (post) => {
     
@@ -28,23 +29,21 @@ const Feed = React.memo(() => {
 
 
   const handleDeletePost = (post) => {
-      dispatch(deletePostAction(post.id));
+      dispatch(deletePostAction(post));
       dispatch(fetchPostsAction());
   }
-    
-  const handleDeleteAllPosts = () => {
-    dispatch(handleDeleteAllPostsAction());
-    dispatch(fetchPostsAction());
-  };
+  // /posts/api/update/${post._id}
   const handleUpdatePost = (post) => {
-    const { title, content, perfume, image, author, date, comments, likes, createdAt } = post;
-    const postToUpdate = { title: title, content: content, perfume: perfume, image: image, author: author, date: date, comments: comments, likes: likes, createdAt: createdAt };
+    const postToUpdate = { ...post };
+    navigate(`/edit/${postToUpdate._id}`);
 
-    console.log(post);
-    dispatch(updatePostAction(post.id, post));
-    dispatch(fetchPostsAction());
-}
+    if (!post) return;
+    dispatch(updatePostAction(post._id, postToUpdate, navigate));
+  };
 
+useEffect(() => {
+  dispatch(fetchPostsAction());
+}, [dispatch]);
 
   if (loading) {
     return <div><Spinner animation="grow" variant="warning" /></div>;
@@ -58,21 +57,6 @@ const Feed = React.memo(() => {
         {posts.map((post, id) => (
           <ListGroup.Item key={id}>
           <Card>
-          <Card.Title>{post.title} BY : {post.author}</Card.Title>
-            
-            {/* <Card.Text>{post.perfume}</Card.Text>
-            <Card.Text>{post.content}</Card.Text>
-            <Card.Text>{post.image}</Card.Text>
-            <Card.Text>{post.author}</Card.Text>
-            <Card.Text>{post.content}</Card.Text>
-            <Card.Text>{post.date}</Card.Text>
-            <Card.Text>{post.comments}</Card.Text>
-            <Card.Text className="text-muted">
-                      {moment(post.createdAt).fromNow()} by {post._id}
-                    
-                    </Card.Text>
-            <Card.Text>{post.likes}</Card.Text>
-            <Card.Text>{post.createdAt}</Card.Text> */}
             <Post post={post} handleDeletePost={handleDeletePost} handleUpdatePost={handleUpdatePost}  />
             </Card>
           </ListGroup.Item>

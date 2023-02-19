@@ -1,13 +1,31 @@
-import { Formik, Form, Field ,ErrorMessage} from 'formik';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { updatePostAction } from '../../state/Actions/postActions';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate  } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-const EditPost = (props) => {
-    const { post } = props;
+import { updatePostAction } from '../../state/Actions/postActions';
+
+const Edit = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { id } = useParams();
+    const post = useSelector((state) => state.posts.items.find((post) => post._id === id));
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(false);
+    }, [post]);
+
+    if (!post) {
+        return <div>Post not found</div>;
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     const initialValues = {
+        name: post.name,
         title: post.title,
         content: post.content,
         perfume: post.perfume,
@@ -15,38 +33,33 @@ const EditPost = (props) => {
     };
 
     const validationSchema = Yup.object().shape({
+        name: Yup.string().required('Name is required'),
         title: Yup.string()
             .min(3, 'Title must be at least 3 characters')
             .required('Title is required'),
-        content: Yup.string()
-            .min(10, 'Content must be at least 10 characters')
-            .required('Content is required'),
-        perfume: Yup.string()
-            .required('Perfume is required'),
-        image: Yup.string()
-            .url('Image must be a valid URL')
-            .required('Image is required'),
+        content: Yup.string().required('Content must be at least 3 characters'),
+        perfume: Yup.string().required('Perfume is required'),
+        image: Yup.string().required('Image is required'),
     });
-    //  router.put('/api/update/:_id', check('_id').isMongoId(), updatePost);
+    
     // const handleSubmit = (values, { setSubmitting, resetForm }) => {
     //     // Dispatch the action to update the post here
-    //     navigate("/");
-    //     dispatch(updatePostAction( post._id, values));
+    //     dispatch(updatePostAction(post._id, values));
+    //     navigate(`/post/${post._id}`);
     //     setSubmitting(false);
-    //     resetForm({ values });
+    //     resetForm();
     // };
-    
-    const handleSubmit = (values, { setSubmitting, resetForm }) => {
-        dispatch(updatePostAction(post._id, values, navigate));
-        console.log("handleSubmit" + post._id , values);
-        setTimeout(() => {
-          navigate(`/`);
-        }, 1000);
-        console.log("handleSubmit" + post._id , values);
-        setSubmitting(false);
-        resetForm();
-      };
-      
+   const handleSubmit = (values, { setSubmitting, resetForm }) => {
+    dispatch(updatePostAction(post._id, values, navigate));
+    console.log("handleSubmit" + post._id , values);
+    setTimeout(() => {
+      navigate(`/`);
+    }, 1000);
+    console.log("handleSubmit" + post._id , values);
+    setSubmitting(false);
+    resetForm();
+};
+
 
     return (
         <Formik
@@ -55,7 +68,11 @@ const EditPost = (props) => {
             onSubmit={handleSubmit}
         >
             {({ isSubmitting }) => (
-                <Form id="edit-post-form">
+                <Form>
+                    <div>
+                        <Field type="text" name="name" placeholder="Name" />
+                        <ErrorMessage name="name" component="div" />
+                    </div>
                     <div>
                         <Field type="text" name="title" placeholder="Title" />
                         <ErrorMessage name="title" component="div" />
@@ -73,7 +90,7 @@ const EditPost = (props) => {
                         <ErrorMessage name="image" component="div" />
                     </div>
                     <button type="submit" disabled={isSubmitting}>
-                        Save
+                        Submit
                     </button>
                 </Form>
             )}
@@ -81,4 +98,4 @@ const EditPost = (props) => {
     );
 }
 
-export default EditPost;
+export default Edit;

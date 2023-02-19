@@ -7,7 +7,7 @@ import { Button, Form } from 'react-bootstrap';
 
 
 
-const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handleDeletePost }) => {
+const NewPost = React.memo( ({ post,user,handleNewPost, handleDeletePost }) => {
     const [title, setTitle] = useState('');
     const [name , setName] = useState('');
     const [content, setContent] = useState('');
@@ -27,7 +27,7 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
             content: content,
             perfume : perfume,
             image : image,
-            author,
+            author : author,
             comments,
             likes,
             user,
@@ -93,9 +93,9 @@ const NewPost = React.memo( ({ post,user,handleNewPost, handleUpdatePost, handle
             
             </div>
             <br />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" className='submit_newpost_button'>Submit</Button>
         </form>
-        <Button variant="danger" onClick={handleDeletePost}>Delete Post</Button>
+        {/* <Button variant="danger" onClick={handleDeletePost}>Delete Post</Button> */}
         </div>
     );
 });

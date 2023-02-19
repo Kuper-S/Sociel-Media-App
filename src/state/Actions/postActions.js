@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { addPost,
      deletePost,
       fetchPost,
@@ -14,7 +15,8 @@ export const fetchPostsAction = () => async (dispatch) => {
         dispatch(fetchPostsStart());
         const res = await axios.get('/posts/api/posts');
         const posts = res.data.posts;
-        console.log(posts.map((post) => post.id = post._id));
+        // To REMOVE
+        // console.log(posts.map((post) => post.id = post._id));
         posts.sort((a, b) => b.createdAt - a.createdAt);
         dispatch(fetchPostsSuccess(posts));
     } catch (err) {
@@ -97,37 +99,70 @@ export const handleDeleteAllPostsAction = () => async (dispatch) => {
 };
 
 
-export const updatePostAction = (id) => async (dispatch) => {
+
+
+// export const updatePostAction = (id, values, navigate) => async () => {
+//   const dispatch = useDispatch();
+//   try {
+//     dispatch(fetchPostsStart());
+//     const res = await axios.put(`/posts/api/update/${id}`, values);
+//     const updatedPost = res.data.post._id;
+//     console.log(updatedPost);
+//     if (!res.data.posts) {
+//       console.log(res.data);
+//       throw new Error(res.data.message);
+//     }
+//     dispatch(updatePost(res.data.post));
+//     navigate("/");
+//   } catch (err) {
+//     console.log(err);
+//     dispatch({ type: 'ERROR', error: err });
+//   }
+// };
+
+// export const updatePostAction = (id, values, navigate) => async () => {
+//     const dispatch = useDispatch();
+//     try {
+//       dispatch(fetchPostsStart());
+//       const res = await axios.put(`/posts/api/update/${id}`, values);
+//       const updatedPost = res.data.post._id;
+//       console.log(updatedPost);
+//       if (!res.data.posts) {
+//         console.log(res.data);
+//         throw new Error(res.data.message);
+//       }
+//       dispatch(updatePost(updatedPost));
+//       navigate("/");
+//     } catch (err) {
+//       console.log(err);
+//       dispatch({ type: 'ERROR', error: err });
+//     }
+//   };
+const UpdatePostActionWrapper = async ({ id, values, navigate }) => {
+    const dispatch = useDispatch();
     try {
-        dispatch(fetchPostsStart());
-        const res = await axios.get('/posts/api/posts');
-        const data = res.data.posts;
-       
-        const newPost = data;
-        console.log(newPost[0]._id);
-        if (!newPost) {
-            return dispatch({ type: 'ERROR', error: 'Post not found' });
-        }
-        const updatedPost = newPost.find((post) => post._id === id);
-        // console.log(updatedPost.id, updatedPost._id, updatedPost.title, updatedPost.content);
-        if (!updatedPost) {
-            return dispatch({ type: 'ERROR', error: 'Post not found' });
-          }
-        await axios.put(`/posts/api/update/${updatedPost._id}`, updatedPost);
-        if (!res.data.posts) {
-            console.log(res.data);
-            throw new Error(res.data.message);
-        }
-        
-       
-        // updatedPost.id = updatedPost._id;
-        dispatch(updatePost(updatedPost));
-        console.log(updatedPost._id);
+      dispatch(fetchPostsStart());
+      const res = await axios.put(`/posts/api/update/${id}`, values);
+      const updatedPost = res.data.post._id;
+      console.log(updatedPost);
+      if (!res.data.posts) {
+        console.log(res.data);
+        throw new Error(res.data.message);
+      }
+      dispatch(updatePost(updatedPost));
+      navigate("/");
     } catch (err) {
-        console.log(err);
-        dispatch({ type: 'ERROR', error: err });
+      console.log(err);
+      dispatch({ type: 'ERROR', error: err });
     }
-}
+  };
+  
+  export const updatePostAction = (id, values, navigate) => {
+    return <UpdatePostActionWrapper id={id} values={values} navigate={navigate} />;
+  };
+  
+
+
 
 export const fetchPostAction = () => async (dispatch) => {
      try { 
@@ -139,19 +174,6 @@ export const fetchPostAction = () => async (dispatch) => {
             dispatch({ type: 'ERROR', error: err });
         }
 }
-
-// export const addPostAction = (post) => async (dispatch) => {
-//     try {
-//         const res = await axios.post(`/posts/api/newpost/${post.id}`, post);
-//         const newPost = res.data;
-//         const postId = newPost._id;
-//         console.log(newPost._id);
-//         dispatch(addPost(newPost));
-//     } catch (err) {
-//         console.log(err);
-//         dispatch({ type: 'ERROR', error: err });
-//     }
-// }
 
 
 

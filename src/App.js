@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import Register from "./pages/Login/Register";
-
+import Edit from "./pages/Edit/Edit";
 function App() {
   const isAuth = true;
   return (
@@ -18,6 +18,7 @@ function App() {
        
       <Routes>
       <Route path="/" element={ <Home/> }/>
+      <Route path="/edit/:id" element={ <Edit/> }/>
       {/* <Route exact path="/register"  render={() => (isAuth ? <Navigate to="/" /> : <Register />)} /> */}
       {/* <Route exact path="/register" element ={<Register/>}> */}
 

@@ -13,7 +13,7 @@ const Home = React.memo(() => {
   return (
     
     <div className="home-container">
-      <h1 className="home-title">Welcome you MANAIAC</h1>
+      <h1 className="home-title">Feed</h1>
      
       <div className="home-content">
         <div className="home-left">
